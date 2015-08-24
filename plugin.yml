@@ -1,0 +1,61 @@
+name: MauKits
+author: Tulir293
+main: net.maunium.bukkit.MauKits.MauKits
+website: http://maunium.net
+version: 1.3
+depend: [Maussentials, Vault]
+commands:
+  kit:
+    description: List all kits or select a kit.
+    aliases: [maukit, maukits, kits]
+  createkit:
+    description: Create a kit.
+    permission: maukits.create
+    aliases: [maucreatekit, maucrkit, crkit]
+  deletekit:
+    description: Remove a kit.
+    permission: maukits.remove
+    aliases: [maudeletekit, delkit, maudelkit, mauremovekit, removekit, maurmkit, rmkit]
+  deselectkit:
+    description: Deselect the kit you have currently on you.
+    permission: maukits.deselect
+    aliases: [maudeselect, maudesel, desel, deselectkit, maudeselkit, deselkit, ds, mauds, dskit, maudskit]
+  kitgui:
+    description: Customize the kit GUI.
+    permission: maukits.editgui
+    aliases: [maukitgui, kg, maukg]
+  maukits:
+    description: Save/Load kits and configuration
+    permission: maukits.admin
+permissions:
+  maukits.create:
+    description: Create a kit
+    default: OP
+  maukits.remove:
+    description: Remove a kit
+    default: OP
+  maukits.editgui:
+    description: Customize the kit GUI.
+    default: OP
+  maukits.deselect:
+    description: Deselect the kit you have currently on you.
+    default: OP
+  maukits.reselect.command:
+    description: Select a kit with commands even if you have one selected.
+    default: OP
+  maukits.reselect.sign:
+    description: Select a kit with a sign even if you have one selected.
+    default: true
+  maukits.reselect.gui:
+    description: Select a kit with the GUI even if you have one selected.
+    default: OP
+  maukits.admin:
+    description: Save/Load kits and configuration
+    default: OP
+  maukits.reselect:
+    description: Select a kit even if you have one selected.
+    default: OP
+    children:
+      maukits.reselect.command: true
+      maukits.reselect.sign: true
+      maukits.reselect.gui: true

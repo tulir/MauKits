@@ -1,0 +1,51 @@
+usage=Käyttö: /{0} <kit name>
+stag=&2[&aMauKits&2] &7
+errtag=&4[&cMauKits&4] &c
+
+add.replaced=Luotiin pakkaus &6{0}&7 uudelleen.
+add.created=Luotiin pakkaus &6{0}&7.
+
+delete=Poistettiin pakkaus&6{0}&7.
+sign=Luotiin Ⓜ-Kit kyltti pakkaukselle &6{0}&7.
+unassign=Otit pakkauksesi pois käytöstä.
+unassign.fail=Sinulla ei ole pakkausta valittuna.
+
+seticon.success=Asetettiin pakkauksen &6{0}&7 ikoniksi kädessäsi oleva esine.
+seticon.emptyhand=Sinulla on oltava esine kädessä, jotta voit asettaa pakkauksen ikonin.
+
+setposition.removed=Poistettiin pakkauksen &6{0}&7 staattinen GUI-sijainti.
+setposition.set=Asetettiin pakkauksen &6{0}&7 staattiseksi GUI-sijainniksi &6{1}, {2}&7.
+
+extra.added=Lisättiin ylimääräinen GUI-esine ID:llä &6{0}&7.
+extra.removed=Poistettiin ylimääräinen GUI-esine, jolla oli ID &6{0}&7.
+extra.args.add=Toisen ja kolmannen argumenttien on oltava kokonaislukuja.
+extra.args.remove=Kolmannen argumentin on oltava kokonaisluku!
+extra.noiteminhand=Sinulla on oltava esine kädessä, jotta voit lisätä sen ylimääräiseksi GUI-esineeksi.
+extra.idnotfound=Tuolla ID:llä ei ole ylimääräistä GUI-esinettä
+
+assign.success=Valitsit pakkauksen &6{0}&7.
+assign.noperms=Sinulla ei ole lupaa käyttää pakkausta &6{0}&c.
+assign.alreadyselected=Olet jo valinnut pakkauksen.
+assign.cooldown=Otit pakkauksesi pois käytöstä vähän aikaa sitten. Odota hetki ennen kuin valitset uuden pakkauksen.
+
+conf.save=Pakkaukset ja konfiguraatio tallennettu.
+conf.load=Pakkaukset ja konfiguraatio ladattu uudelleen.
+conf.psr.on=Preparation for safe reload complete.
+conf.psr.off=Cancelled preparation for safe reload.
+info=Tulir293:n MauKits v{0} (2014-malli)
+
+kits=Lista pakkauksista: {0}
+kits.none=Ei pakkauksia löydetty!
+kit.notfound=Pakkausta &6{0}&c ei löydetty.
+
+gui.title=MauKits Ⓜ-Kit Valitsin
+gui.enter.name=Ⓜ-Kit Valitsin
+gui.enter.lore=&3Käytä tätä esinettä\n&3avataksesi Kit valitsimen
+
+shop.allow=Annettiin lupa käyttää kauppaa pakkauksen &6{0}&7 käyttäjille.
+shop.deny=Poistettiin lupa käyttää kauppaa pakkauksen &6{0}&7 käyttäjiltä.
+shop.bought=Ostit &6{0}&7 &6{1}:n&7 hinnalla.
+shop.notenoughmoney=Sinulla ei ole tarpeeksi rahaa ostaa &6{0}&c &6{1}:n&c hinnalla.
+shop.nokit=Sinulla ei ole pakkausta valittuna!
+shop.noperms=Pakkauksen &6{0}&c käyttäjillä ei ole lupaa käyttää kauppaa!
+shop.disabled=Tuota esinettä ei voi juuri nyt ostaa.

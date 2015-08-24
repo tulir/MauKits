@@ -1,0 +1,48 @@
+usage=Usage: /{0} <kit name>
+ingameonly=Only players can use /{0}
+
+stag=&2[&aMauKits&2] &7
+errtag=&4[&cMauKits&4] &c
+
+refillchest=&6Refill Chest
+
+add.replaced=Re-created kit &6{0}&7.
+add.created=Created kit &6{0}&7.
+
+delete=Deleted kit &6{0}&7.
+sign=Created a MauKit sign for the kit &6{0}&7.
+unassign=You have successfully deselected kit.
+unassign.fail=You don't have a kit selected.
+
+seticon.success=Set the icon of the kit &6{0}&7 to the item in your hand.
+seticon.emptyhand=You must have an item in your hand to set the GUI item of a kit.
+
+setposition.removed=Removed the custom GUI position of the kit &6{0}&7.
+setposition.set=Set the GUI position of the kit &6{0}&7 to &6{1}, {2}&7.
+
+extra.added=Added the item in your hand to the kit selector GUI with ID &6{0}&7.
+extra.removed=Removed the extra GUI item that had the ID &6{0}&7.
+extra.args.add=The second and third argument must be integers!
+extra.args.remove=The third argument must be an integer!
+extra.noiteminhand=You must have an item in your hand to add it.
+extra.idnotfound=There is no extra GUI item by that ID.
+
+assign.success=Selected kit &6{0}&7.
+assign.noperms=You don't have the permissions to use the kit &6{0}&c.
+assign.alreadyselected=You already have a kit selected.
+assign.cooldown=You have recently de-selected your kit. Please wait.
+
+conf.save=Kits and configuration saved.
+conf.load=Kits and configuration reloaded.
+conf.psr.on=Preparation for safe reload complete.
+conf.psr.off=Cancelled preparation for safe reload.
+info=MauKits v{0} (2014 edition) by Tulir293
+
+kits=List of Kits: {0}
+kits.none=No kits found!
+kit.notfound=Couldn't find the kit &6{0}&c.
+
+gui.title=&a&lMauKits Ⓜ-Kit Selector
+gui.enter.name=&2&lⓂ-Kit Selector
+gui.enter.lore=&3Right-click with this to\n&3open the kit selector GUI
+gui.posedit.name=MauKits Gui Editor
