@@ -34,7 +34,7 @@ public class InteractListener implements Listener {
 				&& (evt.getAction().equals(Action.RIGHT_CLICK_AIR) || evt.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
 			if (evt.getItem().hasItemMeta() && evt.getItem().getItemMeta().hasDisplayName()
 					&& evt.getItem().getItemMeta().getDisplayName().equals(plugin.translate("gui.enter.name")))
-				plugin.getSelectGui().openSelector(evt.getPlayer());
+				plugin.getGuiHandler().openSelector(evt.getPlayer());
 		} else if (evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			if (chests && evt.getClickedBlock().getType().equals(Material.TRAPPED_CHEST)) {
 				evt.setCancelled(true);

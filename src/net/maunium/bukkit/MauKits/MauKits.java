@@ -35,7 +35,6 @@ import net.maunium.bukkit.MauKits.Commands.CommandSelect;
 import net.maunium.bukkit.MauKits.Listeners.DamageListener;
 import net.maunium.bukkit.MauKits.Listeners.FoodListener;
 import net.maunium.bukkit.MauKits.Listeners.InteractListener;
-import net.maunium.bukkit.MauKits.Listeners.InventoryClickListener;
 import net.maunium.bukkit.MauKits.Listeners.JQListener;
 import net.maunium.bukkit.MauKits.Listeners.PreCommandListener;
 import net.maunium.bukkit.MauKits.Listeners.RespawnListener;
@@ -64,7 +63,7 @@ public class MauKits extends JavaPlugin implements I15r {
 	/** The Vault economy instance. */
 	private Economy econ;
 	private int dsTimeout = 5000;
-	private GuiHandler guiSelect;
+	private GuiHandler guiHandler;
 	/**
 	 * Set to true when the selected kit values have been saved to a temporary file and thus the kits should not be
 	 * deselected on disable and the metadata will be re-set on enable.
@@ -83,13 +82,15 @@ public class MauKits extends JavaPlugin implements I15r {
 		// Register configuration serializables.
 		ConfigurationSerialization.registerClass(Kit.class);
 		
+		guiHandler = new GuiHandler(this);
+		
 		// Load configuration.
 		reloadConfig();
 		
 		// Register listeners.
 		getServer().getPluginManager().registerEvents(new PreCommandListener(this), this);
 		getServer().getPluginManager().registerEvents(new RespawnListener(this), this);
-		getServer().getPluginManager().registerEvents(new InventoryClickListener(this), this);
+		getServer().getPluginManager().registerEvents(new GuiHandler(this), this);
 		getServer().getPluginManager().registerEvents(new InteractListener(this), this);
 		getServer().getPluginManager().registerEvents(new SignChangeListener(this), this);
 		getServer().getPluginManager().registerEvents(new JQListener(this), this);
@@ -128,8 +129,6 @@ public class MauKits extends JavaPlugin implements I15r {
 			// Delete the temporary safe reload data file.
 			f.delete();
 		}
-		
-		guiSelect = new GuiHandler(this);
 		
 		dsTimeout = getConfig().getInt("deselect-timeout");
 		
@@ -181,6 +180,7 @@ public class MauKits extends JavaPlugin implements I15r {
 	public void reloadConfig() {
 		saveResource("en_US.lang", true);
 		saveResource("fi_FI.lang", true);
+		super.reloadConfig();
 		
 		try {
 			i18n = I18n.createInstance(getDataFolder(), getConfig().getString("language"));
@@ -189,7 +189,8 @@ public class MauKits extends JavaPlugin implements I15r {
 		}
 		
 		YamlConfiguration gui = YamlConfiguration.loadConfiguration(guiConf);
-		guiSelect.setContents(gui.getList("gui").toArray(new ItemStack[0]));
+		if (gui.contains("gui")) guiHandler.setContents(gui.getList("gui").toArray(new ItemStack[0]));
+		else guiHandler.setContents(new ItemStack[guiHandler.length]);
 		
 		if (!kitfolder.exists()) kitfolder.mkdirs();
 		Permission p = new Permission("maukits.kits.*", "Allows you to use all kits", PermissionDefault.OP);
@@ -207,14 +208,13 @@ public class MauKits extends JavaPlugin implements I15r {
 				}
 			}
 		}
-		super.reloadConfig();
 	}
 	
 	@Override
 	public void saveConfig() {
 		YamlConfiguration gui = new YamlConfiguration();
 		List<ItemStack> items = new ArrayList<ItemStack>();
-		for (ItemStack is : guiSelect.getContents()) {
+		for (ItemStack is : guiHandler.getContents()) {
 			if (is != null) items.add(is);
 			else items.add(new ItemStack(Material.AIR));
 		}
@@ -243,7 +243,7 @@ public class MauKits extends JavaPlugin implements I15r {
 		Permission p = new Permission("maukits.kits." + k.getName().toLowerCase(), "Allows you to use the kit " + k.getName(), PermissionDefault.OP);
 		p.addParent("maukits.kits.*", true);
 		if (getServer().getPluginManager().getPermission(p.getName()) == null) getServer().getPluginManager().addPermission(p);
-		
+		if (!getGuiHandler().containsItem(k.getIcon())) getGuiHandler().addGuiItem(k.getIcon());
 		return kits.put(k.getName().toLowerCase(), k) != null;
 	}
 	
@@ -251,8 +251,8 @@ public class MauKits extends JavaPlugin implements I15r {
 		return Maps.newHashMap(kits);
 	}
 	
-	public GuiHandler getSelectGui() {
-		return guiSelect;
+	public GuiHandler getGuiHandler() {
+		return guiHandler;
 	}
 	
 	public boolean removeKit(String name) {

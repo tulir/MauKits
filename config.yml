@@ -1,5 +1,4 @@
 language: en_US
 deselect-timeout: 5000
-extra-gui-items: []
 refill-chests:
   enabled: true

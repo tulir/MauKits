@@ -21,7 +21,8 @@ public class CommandSelect implements CommandExecutor {
 		if (sender instanceof Player) {
 			Player p = (Player) sender;
 			if (args.length > 0) {
-				if (args[0].equalsIgnoreCase("gui")) plugin.getSelectGui().openSelector(p);
+				if (args[0].equalsIgnoreCase("gui")) plugin.getGuiHandler().openSelector(p);
+				if (args[0].equalsIgnoreCase("edit")) plugin.getGuiHandler().openEditor(p);
 				else plugin.assignKitWithOutput(p, args[0], MauKits.KitAssignMode.COMMAND);
 			} else {
 				StringBuffer sb = new StringBuffer();
