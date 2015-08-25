@@ -1,35 +1,66 @@
-package net.maunium.bukkit.MauKits.Gui;
+package net.maunium.bukkit.MauKits;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import net.maunium.bukkit.MauKits.MauKits;
 import net.maunium.bukkit.MauKits.MauKits.AssignResult;
 import net.maunium.bukkit.MauKits.MauKits.KitAssignMode;
-import net.maunium.bukkit.MauKits.Configuration.Kit;
-import net.maunium.bukkit.MauKits.Configuration.KitGuiItem;
 
-public class GuiSelect implements Listener {
+public class GuiHandler implements Listener {
+	private int length = 6 * 9;
+	private ItemStack[] gui;
 	private MauKits plugin;
 	
-	public GuiSelect(MauKits plugin) {
+	public GuiHandler(MauKits plugin) {
 		this.plugin = plugin;
 	}
 	
-	public void open(Player p) {
-		Inventory gui = plugin.getServer().createInventory(null, 36, ChatColor.GREEN + "" + ChatColor.BOLD + plugin.translate("gui.title"));
-		for (Kit k : plugin.getKits().values())
-			if (k.hasCustomPosition()) gui.setItem(k.getCustomGuiY() * 9 + k.getCustomGuiX(), k.getIcon());
-			else gui.addItem(k.getIcon());
-		for (KitGuiItem kgi : plugin.extra)
-			kgi.addTo(gui);
+	public ItemStack[] getContents() {
+		return gui;
+	}
+	
+	public void addGuiItem(ItemStack is) {
+		for (int i = 0; i < gui.length; i++)
+			if (gui[i] == null || gui[i].getType() == Material.AIR) gui[i] = is;
+	}
+	
+	public void replaceGuiItem(ItemStack oldItem, ItemStack newItem) {
+		for (int i = 0; i < gui.length; i++)
+			if (gui[i].equals(oldItem)) gui[i] = newItem;
+	}
+	
+	public void setContents(ItemStack[] contents) {
+		if (contents.length != length) {
+			gui = new ItemStack[length];
+			System.arraycopy(contents, 0, gui, 0, contents.length);
+		} else gui = contents;
+	}
+	
+	public void openSelector(Player p) {
+		Inventory gui = plugin.getServer().createInventory(null, 36, plugin.translate("gui.title"));
+		gui.setContents(this.gui);
 		p.openInventory(gui);
+	}
+	
+	public void openEditor(Player p) {
+		Inventory gui = plugin.getServer().createInventory(null, 36, plugin.translate("gui.edit.title"));
+		gui.setContents(this.gui);
+		p.openInventory(gui);
+	}
+	
+	@EventHandler
+	public void onInventoryClose(InventoryCloseEvent evt) {
+		if (!(evt.getPlayer() instanceof Player)) return;
+		Player p = (Player) evt.getPlayer();
+		Inventory i = evt.getInventory();
+		if (!i.getTitle().equals(plugin.translate("gui.edit.title"))) return;
+		setContents(i.getContents());
 	}
 	
 	@EventHandler

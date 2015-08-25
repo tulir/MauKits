@@ -12,19 +12,22 @@ public class DamageListener implements Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onDamage(EntityDamageByEntityEvent evt) {
-		if (evt.getDamager() instanceof Player){
+		if (evt.getDamager() instanceof Player) {
 			Player p = (Player) evt.getDamager();
-			if(!p.getItemInHand().getType().equals(Material.POTION)) p.getItemInHand().setDurability((short) 0);
+			if (p.getItemInHand().getType() != Material.POTION) p.getItemInHand().setDurability((short) 0);
 			p.updateInventory();
-		}
-		else if (evt.getDamager() instanceof Arrow) {
+		} else if (evt.getDamager() instanceof Arrow) {
 			Arrow a = (Arrow) evt.getDamager();
-			if (a.getShooter() instanceof Player) ((Player) a.getShooter()).getItemInHand().setDurability((short) 0);
+			if (a.getShooter() instanceof Player) {
+				Player p = (Player) a.getShooter();
+				p.getItemInHand().setDurability((short) 0);
+				p.updateInventory();
+			}
 		}
 		if (evt.getEntity() instanceof Player) {
 			Player p = (Player) evt.getEntity();
 			for (ItemStack is : p.getInventory().getArmorContents())
-				is.setDurability((short) 0);
+				if (is.getType() != Material.WOOL) is.setDurability((short) 0);
 			p.updateInventory();
 		}
 	}

@@ -4,8 +4,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
+import net.maunium.bukkit.MauKits.Kit;
 import net.maunium.bukkit.MauKits.MauKits;
-import net.maunium.bukkit.MauKits.Configuration.Kit;
 
 public class PreCommandListener implements Listener {
 	private MauKits plugin;

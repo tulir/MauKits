@@ -1,6 +1,7 @@
 package net.maunium.bukkit.MauKits;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,12 +29,9 @@ import net.milkbowl.vault.economy.Economy;
 import net.maunium.bukkit.MauKits.Commands.CommandCreate;
 import net.maunium.bukkit.MauKits.Commands.CommandDelete;
 import net.maunium.bukkit.MauKits.Commands.CommandDeselect;
-import net.maunium.bukkit.MauKits.Commands.CommandGui;
+import net.maunium.bukkit.MauKits.Commands.CommandKitIcon;
 import net.maunium.bukkit.MauKits.Commands.CommandMauKits;
 import net.maunium.bukkit.MauKits.Commands.CommandSelect;
-import net.maunium.bukkit.MauKits.Configuration.Kit;
-import net.maunium.bukkit.MauKits.Configuration.KitGuiItem;
-import net.maunium.bukkit.MauKits.Gui.GuiSelect;
 import net.maunium.bukkit.MauKits.Listeners.DamageListener;
 import net.maunium.bukkit.MauKits.Listeners.FoodListener;
 import net.maunium.bukkit.MauKits.Listeners.InteractListener;
@@ -61,22 +59,19 @@ public class MauKits extends JavaPlugin implements I15r {
 	public String stag, errtag;
 	/** A name-kit mapping. */
 	private Map<String, Kit> kits = new HashMap<String, Kit>();
-	/** A list of extra kit gui items. */
-	// TODO: Use a gui-based kit select gui editor.
-	private List<KitGuiItem> extra;
 	/** The internationalization system. */
 	private I18n i18n;
 	/** The Vault economy instance. */
 	private Economy econ;
 	private int dsTimeout = 5000;
-	private GuiSelect guiSelect;
+	private GuiHandler guiSelect;
 	/**
-	 * Set to true when the selected kit values have been saved to a temporary file and thus the
-	 * kits should not be deselected on disable and the metadata will be re-set on enable.
+	 * Set to true when the selected kit values have been saved to a temporary file and thus the kits should not be
+	 * deselected on disable and the metadata will be re-set on enable.
 	 */
 	public boolean safeReloadPrepared;
 	/** The folder containing the files containing kits. */
-	public final File kitfolder = new File(getDataFolder(), "kits");
+	public final File kitfolder = new File(getDataFolder(), "kits"), guiConf = new File(getDataFolder(), "gui.yml");
 	
 	@Override
 	public void onEnable() {
@@ -87,10 +82,9 @@ public class MauKits extends JavaPlugin implements I15r {
 		
 		// Register configuration serializables.
 		ConfigurationSerialization.registerClass(Kit.class);
-		ConfigurationSerialization.registerClass(KitGuiItem.class);
 		
 		// Load configuration.
-		loadConfig();
+		reloadConfig();
 		
 		// Register listeners.
 		getServer().getPluginManager().registerEvents(new PreCommandListener(this), this);
@@ -105,7 +99,7 @@ public class MauKits extends JavaPlugin implements I15r {
 		// Set executors for commands.
 		getCommand("kit").setExecutor(new CommandSelect(this));
 		getCommand("maukits").setExecutor(new CommandMauKits(this));
-		getCommand("kitgui").setExecutor(new CommandGui(this));
+		getCommand("kiticon").setExecutor(new CommandKitIcon(this));
 		getCommand("createkit").setExecutor(new CommandCreate(this));
 		getCommand("deletekit").setExecutor(new CommandDelete(this));
 		getCommand("deselectkit").setExecutor(new CommandDeselect(this));
@@ -135,7 +129,7 @@ public class MauKits extends JavaPlugin implements I15r {
 			f.delete();
 		}
 		
-		guiSelect = new GuiSelect(this);
+		guiSelect = new GuiHandler(this);
 		
 		dsTimeout = getConfig().getInt("deselect-timeout");
 		
@@ -183,7 +177,8 @@ public class MauKits extends JavaPlugin implements I15r {
 		getLogger().info("MauKits v" + version + " by Tulir293 disabled in " + et + "ms.");
 	}
 	
-	public void loadConfig() {
+	@Override
+	public void reloadConfig() {
 		saveResource("en_US.lang", true);
 		saveResource("fi_FI.lang", true);
 		
@@ -193,18 +188,16 @@ public class MauKits extends JavaPlugin implements I15r {
 			e.printStackTrace();
 		}
 		
-		extra = new ArrayList<KitGuiItem>();
-		for (Object o : getConfig().getList("extra-gui-items", new ArrayList<KitGuiItem>()))
-			if (o instanceof KitGuiItem) extra.add((KitGuiItem) o);
-			
+		YamlConfiguration gui = YamlConfiguration.loadConfiguration(guiConf);
+		guiSelect.setContents(gui.getList("gui").toArray(new ItemStack[0]));
+		
 		if (!kitfolder.exists()) kitfolder.mkdirs();
 		Permission p = new Permission("maukits.kits.*", "Allows you to use all kits", PermissionDefault.OP);
 		if (getServer().getPluginManager().getPermission(p.getName()) == null) getServer().getPluginManager().addPermission(p);
 		for (File f : kitfolder.listFiles()) {
 			if (f.isFile() && f.getName().endsWith(".yml")) {
 				try {
-					YamlConfiguration conf = new YamlConfiguration();
-					conf.load(f);
+					YamlConfiguration conf = YamlConfiguration.loadConfiguration(f);
 					
 					Object o = conf.get("value");
 					if (o instanceof Kit) addKit((Kit) o);
@@ -219,8 +212,18 @@ public class MauKits extends JavaPlugin implements I15r {
 	
 	@Override
 	public void saveConfig() {
-		getConfig().set("extra-gui-items", extra);
-		super.saveConfig();
+		YamlConfiguration gui = new YamlConfiguration();
+		List<ItemStack> items = new ArrayList<ItemStack>();
+		for (ItemStack is : guiSelect.getContents()) {
+			if (is != null) items.add(is);
+			else items.add(new ItemStack(Material.AIR));
+		}
+		getConfig().set("gui", items);
+		try {
+			gui.save(guiConf);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		if (!kitfolder.exists()) kitfolder.mkdirs();
 		for (Kit k : kits.values()) {
@@ -236,16 +239,6 @@ public class MauKits extends JavaPlugin implements I15r {
 		}
 	}
 	
-	public int addExtraItem(KitGuiItem kgi) {
-		extra.add(kgi);
-		return extra.size() - 1;
-	}
-	
-	public boolean removeExtraItem(int item) {
-		if (item < 0 || item > extra.size() - 1) return false;
-		return extra.remove(item) != null;
-	}
-	
 	public boolean addKit(Kit k) {
 		Permission p = new Permission("maukits.kits." + k.getName().toLowerCase(), "Allows you to use the kit " + k.getName(), PermissionDefault.OP);
 		p.addParent("maukits.kits.*", true);
@@ -258,7 +251,7 @@ public class MauKits extends JavaPlugin implements I15r {
 		return Maps.newHashMap(kits);
 	}
 	
-	public GuiSelect getSelectGui() {
+	public GuiHandler getSelectGui() {
 		return guiSelect;
 	}
 	

@@ -1,7 +1,6 @@
 package net.maunium.bukkit.MauKits.Listeners;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -16,21 +15,17 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.MetadataValue;
 
+import net.maunium.bukkit.MauKits.Kit;
 import net.maunium.bukkit.MauKits.MauKits;
-import net.maunium.bukkit.MauKits.Configuration.Kit;
 import net.maunium.bukkit.Maussentials.Utils.MetadataUtils;
 
 public class InteractListener implements Listener {
 	private MauKits plugin;
-	private boolean chests, healer, toggle;
-	private List<String> healerKits;
+	private boolean chests;
 	
 	public InteractListener(MauKits plugin) {
 		this.plugin = plugin;
 		chests = plugin.getConfig().getBoolean("refill-chests.enabled");
-		healer = plugin.getConfig().getBoolean("refill-chests.instant-health.enabled");
-		toggle = plugin.getConfig().getBoolean("refill-chests.instant-health.allow-toggle");
-		healerKits = plugin.getConfig().getStringList("refill-chests.instant-health.for-kits");
 	}
 	
 	@EventHandler(priority = EventPriority.LOW)
@@ -39,7 +34,7 @@ public class InteractListener implements Listener {
 				&& (evt.getAction().equals(Action.RIGHT_CLICK_AIR) || evt.getAction().equals(Action.RIGHT_CLICK_BLOCK))) {
 			if (evt.getItem().hasItemMeta() && evt.getItem().getItemMeta().hasDisplayName()
 					&& evt.getItem().getItemMeta().getDisplayName().equals(plugin.translate("gui.enter.name")))
-				plugin.getSelectGui().open(evt.getPlayer());
+				plugin.getSelectGui().openSelector(evt.getPlayer());
 		} else if (evt.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			if (chests && evt.getClickedBlock().getType().equals(Material.TRAPPED_CHEST)) {
 				evt.setCancelled(true);

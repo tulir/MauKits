@@ -1,10 +1,11 @@
-package net.maunium.bukkit.MauKits.Configuration;
+package net.maunium.bukkit.MauKits;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -72,7 +73,17 @@ public class Kit implements Serializable, ConfigurationSerializable {
 		im.setDisplayName(ChatColor.GREEN + getName());
 		icon.setItemMeta(im);
 		
-		refill = p.getInventory().getItem(25);
+		Map<ItemStack, Integer> amount = new HashMap<ItemStack, Integer>();
+		for (ItemStack is : p.getInventory().getContents()) {
+			if (amount.containsKey(is)) amount.put(is, amount.get(is) + 1);
+			else amount.put(is, 1);
+		}
+		Entry<ItemStack, Integer> highest = null;
+		for (Entry<ItemStack, Integer> e : amount.entrySet()) {
+			if (highest == null) highest = e;
+			else if (highest.getValue() < e.getValue()) highest = e;
+		}
+		refill = highest.getKey();
 	}
 	
 	/**
@@ -136,8 +147,7 @@ public class Kit implements Serializable, ConfigurationSerializable {
 	
 	/**
 	 * Remove the custom gui position of this kit.<br>
-	 * TODO: All kits should have a specific slot in the GUI, thus removing the position should not
-	 * be possible.
+	 * TODO: All kits should have a specific slot in the GUI, thus removing the position should not be possible.
 	 */
 	public void removeCustomPosition() {
 		guiX = -1;

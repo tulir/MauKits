@@ -20,7 +20,7 @@ public class CommandMauKits implements CommandExecutor {
 				plugin.saveConfig();
 				sender.sendMessage(plugin.stag + plugin.translate("conf.save"));
 			} else if (args[0].equalsIgnoreCase("load") || args[0].equalsIgnoreCase("reload")) {
-				plugin.loadConfig();
+				plugin.reloadConfig();
 				sender.sendMessage(plugin.stag + plugin.translate("conf.load"));
 			} else if (args[0].equalsIgnoreCase("psr")) {
 				if (plugin.safeReloadPrepared) {

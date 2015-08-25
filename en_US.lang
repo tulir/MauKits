@@ -14,9 +14,6 @@ sign=Created a MauKit sign for the kit &6{0}&7.
 unassign=You have successfully deselected kit.
 unassign.fail=You don't have a kit selected.
 
-seticon.success=Set the icon of the kit &6{0}&7 to the item in your hand.
-seticon.emptyhand=You must have an item in your hand to set the GUI item of a kit.
-
 setposition.removed=Removed the custom GUI position of the kit &6{0}&7.
 setposition.set=Set the GUI position of the kit &6{0}&7 to &6{1}, {2}&7.
 
@@ -45,4 +42,7 @@ kit.notfound=Couldn't find the kit &6{0}&c.
 gui.title=&a&lMauKits Ⓜ-Kit Selector
 gui.enter.name=&2&lⓂ-Kit Selector
 gui.enter.lore=&3Right-click with this to\n&3open the kit selector GUI
-gui.posedit.name=MauKits Gui Editor
+gui.edit.title=&a&lMauKits Select Gui Editor
+gui.edit.seticon=Set the icon of the kit &6{0}&7 to the item in your hand.
+gui.edit.seticon.emptyhand=You must have an item in your hand to set the GUI item of a kit.
+gui.edit.seticon.help=Usage: /{0} <kit>

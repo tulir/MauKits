@@ -5,8 +5,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import net.maunium.bukkit.MauKits.Kit;
 import net.maunium.bukkit.MauKits.MauKits;
-import net.maunium.bukkit.MauKits.Configuration.Kit;
 
 public class CommandCreate implements CommandExecutor {
 	private MauKits plugin;

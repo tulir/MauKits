@@ -3,7 +3,3 @@ deselect-timeout: 5000
 extra-gui-items: []
 refill-chests:
   enabled: true
-  instant-health:
-    enabled: true
-    allow-toggle: false
-    for-kits: [Healer]

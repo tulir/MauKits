@@ -20,10 +20,10 @@ commands:
     description: Deselect the kit you have currently on you.
     permission: maukits.deselect
     aliases: [maudeselect, maudesel, desel, deselectkit, maudeselkit, deselkit, ds, mauds, dskit, maudskit]
-  kitgui:
-    description: Customize the kit GUI.
+  kiticon:
+    description: Set the icon of a kit in the selector gui.
     permission: maukits.editgui
-    aliases: [maukitgui, kg, maukg]
+    aliases: [maukiticon, kitguiicon, maukitguiicon, kgicon, maukgicon, kicon, maukicon, kgi, maukgi, ki, mauki]
   maukits:
     description: Save/Load kits and configuration
     permission: maukits.admin

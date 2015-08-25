@@ -6,8 +6,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import net.maunium.bukkit.MauKits.Kit;
 import net.maunium.bukkit.MauKits.MauKits;
-import net.maunium.bukkit.MauKits.Configuration.Kit;
 
 public class CommandSelect implements CommandExecutor {
 	private MauKits plugin;
@@ -20,9 +20,9 @@ public class CommandSelect implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 			Player p = (Player) sender;
-			if (args.length > 0 && args[0].equalsIgnoreCase("gui")) plugin.getSelectGui().open(p);
-			else if (args.length > 0 && label.equalsIgnoreCase("kit") || label.equalsIgnoreCase("maukit")) {
-				plugin.assignKitWithOutput(p, args[0], MauKits.KitAssignMode.COMMAND);
+			if (args.length > 0) {
+				if (args[0].equalsIgnoreCase("gui")) plugin.getSelectGui().openSelector(p);
+				else plugin.assignKitWithOutput(p, args[0], MauKits.KitAssignMode.COMMAND);
 			} else {
 				StringBuffer sb = new StringBuffer();
 				for (Kit k : plugin.getKits().values()) {
