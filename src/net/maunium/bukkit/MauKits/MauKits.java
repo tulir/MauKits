@@ -65,8 +65,8 @@ public class MauKits extends JavaPlugin implements I15r {
 	private int dsTimeout = 5000;
 	private GuiHandler guiHandler;
 	/**
-	 * Set to true when the selected kit values have been saved to a temporary file and thus the kits should not be
-	 * deselected on disable and the metadata will be re-set on enable.
+	 * Set to true when the selected kit values have been saved to a temporary file and thus the
+	 * kits should not be deselected on disable and the metadata will be re-set on enable.
 	 */
 	public boolean safeReloadPrepared;
 	/** The folder containing the files containing kits. */
@@ -218,7 +218,7 @@ public class MauKits extends JavaPlugin implements I15r {
 			if (is != null) items.add(is);
 			else items.add(new ItemStack(Material.AIR));
 		}
-		getConfig().set("gui", items);
+		gui.set("gui", items);
 		try {
 			gui.save(guiConf);
 		} catch (IOException e) {
