@@ -16,25 +16,25 @@ import net.maunium.bukkit.MauKits.MauKits.KitAssignMode;
 
 public class GuiHandler implements Listener {
 	public int length = 6 * 9;
-	private ItemStack[] gui;
+	private ItemStack[] content;
 	private MauKits plugin;
 	
 	public GuiHandler(MauKits plugin) {
 		this.plugin = plugin;
-		gui = new ItemStack[length];
-		Arrays.fill(gui, null);
+		content = new ItemStack[length];
+		Arrays.fill(content, null);
 	}
 	
 	public ItemStack[] getContents() {
-		return gui;
+		return content;
 	}
 	
 	public void addGuiItem(ItemStack is) {
 		if (is == null) return;
 		System.out.println("Add " + is);
-		for (int i = 0; i < gui.length; i++) {
-			if (gui[i] == null || gui[i].getType() == Material.AIR) {
-				gui[i] = is;
+		for (int i = 0; i < content.length; i++) {
+			if (content[i] == null || content[i].getType() == Material.AIR) {
+				content[i] = is;
 				return;
 			}
 		}
@@ -42,34 +42,31 @@ public class GuiHandler implements Listener {
 	
 	public void replaceGuiItem(ItemStack oldItem, ItemStack newItem) {
 		if (oldItem == null) return;
-		System.out.println("Replace " + oldItem + " with " + newItem);
-		for (int i = 0; i < gui.length; i++)
-			if (gui[i].equals(oldItem)) gui[i] = newItem;
+		for (int i = 0; i < content.length; i++)
+			if (content[i].equals(oldItem)) content[i] = newItem;
 	}
 	
 	public boolean containsItem(ItemStack is) {
 		if (is == null) return true;
-		for (ItemStack item : getContents())
+		for (ItemStack item : content)
 			if (is.equals(item)) return true;
 		return false;
 	}
 	
 	public void setContents(ItemStack[] contents) {
-		Arrays.fill(gui, null);
-		System.arraycopy(contents, 0, gui, 0, contents.length >= length ? length : contents.length);
+		Arrays.fill(content, null);
+		System.arraycopy(contents, 0, content, 0, contents.length >= length ? length : contents.length);
 	}
 	
 	public void openSelector(Player p) {
-		System.out.println(Arrays.toString(getContents()));
-		Inventory gui = plugin.getServer().createInventory(null, length, plugin.translate("gui.title"));
-		gui.setContents(this.gui);
+		Inventory gui = plugin.getServer().createInventory(p, length, plugin.translate("gui.title"));
+		gui.setContents(content);
 		p.openInventory(gui);
 	}
 	
 	public void openEditor(Player p) {
-		System.out.println(Arrays.toString(getContents()));
-		Inventory gui = plugin.getServer().createInventory(null, length, plugin.translate("gui.edit.title"));
-		gui.setContents(this.gui);
+		Inventory gui = plugin.getServer().createInventory(p, length, plugin.translate("gui.edit.title"));
+		gui.setContents(content);
 		p.openInventory(gui);
 	}
 	
@@ -79,16 +76,8 @@ public class GuiHandler implements Listener {
 		Player p = (Player) evt.getPlayer();
 		Inventory i = evt.getInventory();
 		if (!i.getTitle().equals(plugin.translate("gui.edit.title"))) return;
-		System.out.println(Arrays.toString(getContents()));
 		setContents(i.getContents());
 		p.sendMessage(plugin.stag + "Updated GUI");
-		
-		plugin.getServer().getScheduler().runTaskLater(plugin, new Runnable() {
-			@Override
-			public void run() {
-				System.out.println(Arrays.toString(getContents()));
-			}
-		}, 2);
 	}
 	
 	@EventHandler

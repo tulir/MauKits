@@ -1,5 +1,7 @@
 package net.maunium.bukkit.MauKits.Commands;
 
+import java.util.Arrays;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,7 +24,9 @@ public class CommandSelect implements CommandExecutor {
 			Player p = (Player) sender;
 			if (args.length > 0) {
 				if (args[0].equalsIgnoreCase("gui")) plugin.getGuiHandler().openSelector(p);
-				if (args[0].equalsIgnoreCase("edit")) plugin.getGuiHandler().openEditor(p);
+				else if (args[0].equalsIgnoreCase("edit")) plugin.getGuiHandler().openEditor(p);
+				else if (args[0].equalsIgnoreCase("content"))
+					System.out.println(plugin.getGuiHandler().getContents() + ": " + Arrays.toString(plugin.getGuiHandler().getContents()));
 				else plugin.assignKitWithOutput(p, args[0], MauKits.KitAssignMode.COMMAND);
 			} else {
 				StringBuffer sb = new StringBuffer();
